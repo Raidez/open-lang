@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "lexer.h"
 #include "parser.h"
 #include "interpreter.h"
@@ -43,7 +44,11 @@ int main(int argc, char *argv[])
     // 3. Lexer
 
     Lexer lexer = {.start = buffer, .current = buffer, .line = 1};
-    // print_tokens(&lexer); // Uncomment this line to print tokens for debugging
+    if (argv[2] && strcmp(argv[2], "--debug") == 0)
+    {
+        print_tokens(&lexer); // Uncomment this line to print tokens for debugging
+        return 0;             // Exit after printing tokens
+    }
 
     // 4. Parser
 
@@ -52,7 +57,7 @@ int main(int argc, char *argv[])
     free(buffer); // Free the buffer after parsing
 
     // 5. Interpret
-    
+
     interpret(ast);
     free_node(ast); // Free the AST after interpretation
 
