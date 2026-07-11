@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     // 0. Parse arguments
-    const char *input_file;
+    char *input_file;
     if (argc < 2)
     {
         fprintf(stderr, "Missing input file.\n");
@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     Parser parser = {.lexer = &lexer, .current = next_token(&lexer), .previous = {0}};
     Node *ast = parse(&parser);
 
+    free_node(ast);
     free(buffer);
 
     return 0;

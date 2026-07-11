@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "parser.h"
+#include "ast.h"
 
 /*** STATIC ****/
 
@@ -35,12 +36,10 @@ static Node *parse_let(Parser *parser)
     consume(parser, TOKEN_SEMICOLON);
 
     // Create a declaration node
-    Node *node = malloc(sizeof(Node));
-    node->type = NODE_DECLARATION;
-    node->value.variable_declaration.is_mutable = false;
-    node->value.variable_declaration.name = strndup(name.start, name.length);
-    node->value.variable_declaration.type = INTEGER;
-    node->value.variable_declaration.value.int_value = atoi(strndup(value.start, value.length));
+    char *declaration_name = strndup(name.start, name.length);
+    char *value_str = strndup(value.start, value.length);
+    Node *node = node_declaration(declaration_name, false, TYPE_INFERRED, node_int_literal(atoi(value_str)));
+    free(value_str);
 
     return node;
 }
