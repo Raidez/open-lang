@@ -41,7 +41,7 @@ Node *node_identifier(char *name)
     return node;
 }
 
-Node *node_declaration(char *name, bool is_mutable, VariableType *type, Node *value)
+Node *node_declaration(char *name, bool is_mutable, VariableType type, Node *value)
 {
     Node *node = malloc(sizeof(Node));
     node->type = NODE_DECLARATION;

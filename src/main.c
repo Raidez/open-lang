@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "lexer.h"
 #include "parser.h"
+#include "interpreter.h"
 #include "utils.h"
 
 int main(int argc, char *argv[])
@@ -48,9 +49,12 @@ int main(int argc, char *argv[])
 
     Parser parser = {.lexer = &lexer, .current = next_token(&lexer), .previous = {0}};
     Node *ast = parse(&parser);
+    free(buffer); // Free the buffer after parsing
 
-    free_node(ast);
-    free(buffer);
+    // 5. Interpret
+    
+    interpret(ast);
+    free_node(ast); // Free the AST after interpretation
 
     return 0;
 }

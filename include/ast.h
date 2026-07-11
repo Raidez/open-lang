@@ -65,7 +65,7 @@ Node *node_float_literal(float value);
 Node *node_string_literal(char *value);
 Node *node_boolean_literal(bool value);
 Node *node_identifier(char *name);
-Node *node_declaration(char *name, bool is_mutable, VariableType *type, Node *value);
+Node *node_declaration(char *name, bool is_mutable, VariableType type, Node *value);
 Node *node_binary_op(OperationType op, Node *left, Node *right);
 
 void free_node(Node *node);
