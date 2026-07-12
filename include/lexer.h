@@ -3,8 +3,9 @@
 
 typedef enum
 {
-    TOKEN_EOF,
-    TOKEN_ERROR,
+    TOKEN_EOF,   // End of file
+    TOKEN_ERROR, // Error token
+    TOKEN_EMPTY, // Empty token (used internally)
 
     TOKEN_LET,
     TOKEN_VAR,
