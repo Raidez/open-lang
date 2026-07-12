@@ -1,0 +1,7 @@
+let a = true && false;
+let b = true || false;
+let c = !a;
+
+if a && b {
+    println!("Both a and b are true");
+}

@@ -7,7 +7,7 @@ println("Guess the number between 1 and 100!");
 
 while guess != mystery {
 
-    let raw_guess = input("Your guess: ");
+    let raw_guess: string = input("Your guess: ");
     guess = raw_guess as int;
 
     if guess < mystery {

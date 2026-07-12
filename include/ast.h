@@ -48,15 +48,6 @@ typedef enum {
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_MODULO,
-    OP_EQUAL,
-    OP_NOT_EQUAL,
-    OP_LESS_THAN,
-    OP_LESS_THAN_EQUAL,
-    OP_GREATER_THAN,
-    OP_GREATER_THAN_EQUAL,
-    OP_AND,
-    OP_OR,
-    OP_XOR,
 } BinaryOperationType;
 
 typedef enum {

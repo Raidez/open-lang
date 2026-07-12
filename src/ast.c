@@ -60,7 +60,7 @@ Node *node_declaration(char *name, bool is_mutable, VariableType type, Node *val
     return node;
 }
 
-Node *node_binary_op(OperationType op, Node *left, Node *right)
+Node *node_binary_op(BinaryOperationType op, Node *left, Node *right)
 {
 
     Node *node = malloc(sizeof(Node));

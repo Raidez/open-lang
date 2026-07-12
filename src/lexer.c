@@ -71,6 +71,9 @@ static const Keyword symbols[] = {
     {"++", 2, TOKEN_INCREMENT},
     {"--", 2, TOKEN_DECREMENT},
     {"::", 2, TOKEN_NAMESPACE},
+    {"&&", 2, TOKEN_AND},
+    {"||", 2, TOKEN_OR},
+    {"^^", 2, TOKEN_XOR},
     // Single-character symbols after
     {".", 1, TOKEN_DOT},
     {"=", 1, TOKEN_ASSIGN},
@@ -88,6 +91,7 @@ static const Keyword symbols[] = {
     {"*", 1, TOKEN_MULTIPLY},
     {"/", 1, TOKEN_DIVIDE},
     {"%", 1, TOKEN_MODULO},
+    {"!", 1, TOKEN_NOT},
 };
 static const int symbols_count = sizeof(symbols) / sizeof(symbols[0]);
 
@@ -119,6 +123,10 @@ static const TokenTypeName token_type_names[] = {
     {TOKEN_GREATER, "GREATER"},
     {TOKEN_LESS_EQUAL, "LESS_EQUAL"},
     {TOKEN_GREATER_EQUAL, "GREATER_EQUAL"},
+    {TOKEN_AND, "AND"},
+    {TOKEN_OR, "OR"},
+    {TOKEN_NOT, "NOT"},
+    {TOKEN_XOR, "XOR"},
     {TOKEN_ADD, "ADD"},
     {TOKEN_SUBTRACT, "SUBTRACT"},
     {TOKEN_MULTIPLY, "MULTIPLY"},

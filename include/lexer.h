@@ -36,6 +36,11 @@ typedef enum
     TOKEN_LESS_EQUAL,
     TOKEN_GREATER_EQUAL,
 
+    TOKEN_AND,
+    TOKEN_OR,
+    TOKEN_NOT,
+    TOKEN_XOR,
+
     TOKEN_ADD,
     TOKEN_SUBTRACT,
     TOKEN_MULTIPLY,
