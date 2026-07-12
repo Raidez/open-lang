@@ -14,6 +14,139 @@ typedef enum
     STRING,
 } WordType;
 
+typedef struct
+{
+    char *keyword;
+    int length;
+    TokenType type;
+} Keyword;
+
+typedef struct
+{
+    TokenType type;
+    char *name;
+} TokenTypeName;
+
+static const Keyword keywords[] = {
+    {"let", 3, TOKEN_LET},
+    {"var", 3, TOKEN_VAR},
+
+    {"int", 3, TOKEN_TYPE_INT},
+    {"float", 5, TOKEN_TYPE_FLOAT},
+    {"bool", 4, TOKEN_TYPE_BOOL},
+    {"string", 6, TOKEN_TYPE_STRING},
+    {"char", 4, TOKEN_TYPE_CHAR},
+
+    {"true", 4, TOKEN_TRUE_LITERAL},
+    {"false", 5, TOKEN_FALSE_LITERAL},
+
+    {"if", 2, TOKEN_IF},
+    {"else", 4, TOKEN_ELSE},
+    {"match", 5, TOKEN_MATCH},
+
+    {"loop", 4, TOKEN_LOOP},
+    {"while", 5, TOKEN_WHILE},
+    {"for", 3, TOKEN_FOR},
+    {"break", 5, TOKEN_BREAK},
+    {"continue", 8, TOKEN_CONTINUE},
+
+    {"func", 4, TOKEN_FUNCTION},
+    {"return", 6, TOKEN_RETURN},
+};
+static const int keywords_count = sizeof(keywords) / sizeof(keywords[0]);
+
+static const Keyword symbols[] = {
+    // Multi-character symbols first
+    {"->", 2, TOKEN_RETURN_TYPE},
+    {"==", 2, TOKEN_EQUAL},
+    {"!=", 2, TOKEN_NOT_EQUAL},
+    {"<=", 2, TOKEN_LESS_EQUAL},
+    {">=", 2, TOKEN_GREATER_EQUAL},
+    {"+=", 2, TOKEN_ADD_ASSIGN},
+    {"-=", 2, TOKEN_SUBTRACT_ASSIGN},
+    {"*=", 2, TOKEN_MULTIPLY_ASSIGN},
+    {"/=", 2, TOKEN_DIVIDE_ASSIGN},
+    {"%=", 2, TOKEN_MODULO_ASSIGN},
+    {"++", 2, TOKEN_INCREMENT},
+    {"--", 2, TOKEN_DECREMENT},
+    // Single-character symbols after
+    {"=", 1, TOKEN_ASSIGN},
+    {":", 1, TOKEN_TYPING},
+    {",", 1, TOKEN_COMMA},
+    {";", 1, TOKEN_SEMICOLON},
+    {"(", 1, TOKEN_LPAREN},
+    {")", 1, TOKEN_RPAREN},
+    {"{", 1, TOKEN_LBRACE},
+    {"}", 1, TOKEN_RBRACE},
+    {"<", 1, TOKEN_LESS},
+    {">", 1, TOKEN_GREATER},
+    {"+", 1, TOKEN_ADD},
+    {"-", 1, TOKEN_SUBTRACT},
+    {"*", 1, TOKEN_MULTIPLY},
+    {"/", 1, TOKEN_DIVIDE},
+    {"%", 1, TOKEN_MODULO},
+};
+static const int symbols_count = sizeof(symbols) / sizeof(symbols[0]);
+
+static const TokenTypeName token_type_names[] = {
+    {TOKEN_EOF, "EOF"},
+    {TOKEN_ERROR, "ERROR"},
+    {TOKEN_EMPTY, "EMPTY"},
+    {TOKEN_LET, "LET"},
+    {TOKEN_VAR, "VAR"},
+    {TOKEN_IDENTIFIER, "IDENTIFIER"},
+    {TOKEN_ASSIGN, "ASSIGN"},
+    {TOKEN_TYPING, "TYPING"},
+    {TOKEN_TYPE_INT, "TYPE_INT"},
+    {TOKEN_TYPE_FLOAT, "TYPE_FLOAT"},
+    {TOKEN_TYPE_BOOL, "TYPE_BOOL"},
+    {TOKEN_TYPE_STRING, "TYPE_STRING"},
+    {TOKEN_TYPE_CHAR, "TYPE_CHAR"},
+    {TOKEN_INCREMENT, "INCREMENT"},
+    {TOKEN_DECREMENT, "DECREMENT"},
+    {TOKEN_ADD_ASSIGN, "ADD_ASSIGN"},
+    {TOKEN_SUBTRACT_ASSIGN, "SUBTRACT_ASSIGN"},
+    {TOKEN_MULTIPLY_ASSIGN, "MULTIPLY_ASSIGN"},
+    {TOKEN_DIVIDE_ASSIGN, "DIVIDE_ASSIGN"},
+    {TOKEN_MODULO_ASSIGN, "MODULO_ASSIGN"},
+    {TOKEN_EQUAL, "EQUAL"},
+    {TOKEN_NOT_EQUAL, "NOT_EQUAL"},
+    {TOKEN_LESS, "LESS"},
+    {TOKEN_GREATER, "GREATER"},
+    {TOKEN_LESS_EQUAL, "LESS_EQUAL"},
+    {TOKEN_GREATER_EQUAL, "GREATER_EQUAL"},
+    {TOKEN_ADD, "ADD"},
+    {TOKEN_SUBTRACT, "SUBTRACT"},
+    {TOKEN_MULTIPLY, "MULTIPLY"},
+    {TOKEN_DIVIDE, "DIVIDE"},
+    {TOKEN_MODULO, "MODULO"},
+    {TOKEN_NUMBER_LITERAL, "NUMBER_LITERAL"},
+    {TOKEN_FLOAT_LITERAL, "FLOAT_LITERAL"},
+    {TOKEN_BOOLEAN_LITERAL, "BOOLEAN_LITERAL"},
+    {TOKEN_STRING_LITERAL, "STRING_LITERAL"},
+    {TOKEN_CHAR_LITERAL, "CHAR_LITERAL"},
+    {TOKEN_TRUE_LITERAL, "TRUE_LITERAL"},
+    {TOKEN_FALSE_LITERAL, "FALSE_LITERAL"},
+    {TOKEN_IF, "IF"},
+    {TOKEN_ELSE, "ELSE"},
+    {TOKEN_MATCH, "MATCH"},
+    {TOKEN_LOOP, "LOOP"},
+    {TOKEN_WHILE, "WHILE"},
+    {TOKEN_FOR, "FOR"},
+    {TOKEN_BREAK, "BREAK"},
+    {TOKEN_CONTINUE, "CONTINUE"},
+    {TOKEN_FUNCTION, "FUNCTION"},
+    {TOKEN_RETURN_TYPE, "RETURN_TYPE"},
+    {TOKEN_RETURN, "RETURN"},
+    {TOKEN_LPAREN, "LPAREN"},
+    {TOKEN_RPAREN, "RPAREN"},
+    {TOKEN_LBRACE, "LBRACE"},
+    {TOKEN_RBRACE, "RBRACE"},
+    {TOKEN_COMMA, "COMMA"},
+    {TOKEN_SEMICOLON, "SEMICOLON"},
+};
+static const int token_type_names_count = sizeof(token_type_names) / sizeof(token_type_names[0]);
+
 /**
  * Peek the current character without advance
  */
@@ -127,11 +260,11 @@ static Token textual_token(Lexer *lexer, bool is_string)
 {
     if (is_string)
     {
-        return (Token){TOKEN_STRING, lexer->start + 1, (int)(lexer->current - lexer->start - 2), lexer->line};
+        return (Token){TOKEN_STRING_LITERAL, lexer->start + 1, (int)(lexer->current - lexer->start - 2), lexer->line};
     }
     else
     {
-        return (Token){TOKEN_CHAR, lexer->start + 1, (int)(lexer->current - lexer->start - 2), lexer->line};
+        return (Token){TOKEN_CHAR_LITERAL, lexer->start + 1, (int)(lexer->current - lexer->start - 2), lexer->line};
     }
 }
 
@@ -144,22 +277,12 @@ static Token handle_word_token(Lexer *lexer)
 
     // Check if the identifier is a keyword
     int length = (int)(lexer->current - lexer->start);
-    if (length == 3 && strncmp(lexer->start, "let", 3) == 0)
+    for (int i = 0; i < keywords_count; i++)
     {
-        return make_token(lexer, TOKEN_LET);
+        if (length == keywords[i].length && strncmp(lexer->start, keywords[i].keyword, length) == 0)
+            return make_token(lexer, keywords[i].type);
     }
-    else if (length == 3 && strncmp(lexer->start, "var", 3) == 0)
-    {
-        return make_token(lexer, TOKEN_VAR);
-    }
-    else if (length == 4 && strncmp(lexer->start, "true", 4) == 0)
-    {
-        return make_token(lexer, TOKEN_TRUE);
-    }
-    else if (length == 5 && strncmp(lexer->start, "false", 5) == 0)
-    {
-        return make_token(lexer, TOKEN_FALSE);
-    }
+
     return make_token(lexer, TOKEN_IDENTIFIER);
 }
 
@@ -208,116 +331,29 @@ static Token handle_numeric_token(Lexer *lexer)
     // Check if the number is float
     int length = (int)(lexer->current - lexer->start);
     if (memchr(lexer->start, '.', length) != NULL)
-        return make_token(lexer, TOKEN_FLOAT);
+        return make_token(lexer, TOKEN_FLOAT_LITERAL);
 
-    return make_token(lexer, TOKEN_NUMBER);
+    return make_token(lexer, TOKEN_NUMBER_LITERAL);
 }
 
 /**
- * Handle operator tokens (single and multi-character operators)
+ * Handle symbol tokens (single and multi-character symbols)
  */
-static Token handle_operator_token(Lexer *lexer, char c)
+static Token handle_symbol_token(Lexer *lexer, char c)
 {
-
-    switch (c)
+    for (int i = 0; i < symbols_count; i++)
     {
-    case ';':
-        return make_token(lexer, TOKEN_SEMICOLON);
-    case '(':
-        return make_token(lexer, TOKEN_LPAREN);
-    case ')':
-        return make_token(lexer, TOKEN_RPAREN);
-    case '{':
-        return make_token(lexer, TOKEN_LBRACE);
-    case '}':
-        return make_token(lexer, TOKEN_RBRACE);
-    case '=':
-    {
-        // Check for == operator
-        if (peek(lexer) == '=')
+        if (c == symbols[i].keyword[0])
         {
-            advance(lexer);
-            return make_token(lexer, TOKEN_EQUAL);
+            // Check for multi-character symbols
+            if (symbols[i].length == 2 && peek(lexer) == symbols[i].keyword[1])
+            {
+                advance(lexer);
+                return make_token(lexer, symbols[i].type);
+            }
+            else if (symbols[i].length == 1)
+                return make_token(lexer, symbols[i].type);
         }
-        return make_token(lexer, TOKEN_ASSIGN);
-    }
-    case '+':
-    {
-        // Check for += operator
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_ADD_ASSIGN);
-        }
-        // Check for ++ operator
-        else if (peek(lexer) == '+')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_INCREMENT);
-        }
-        return make_token(lexer, TOKEN_ADD);
-    }
-    case '-':
-    {
-        // Check for -= operator
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_SUBTRACT_ASSIGN);
-        }
-        // Check for -- operator
-        else if (peek(lexer) == '-')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_DECREMENT);
-        }
-        return make_token(lexer, TOKEN_SUBTRACT);
-    }
-    case '*':
-    {
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_MULTIPLY_ASSIGN);
-        }
-        return make_token(lexer, TOKEN_MULTIPLY);
-    }
-    case '/':
-    {
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_DIVIDE_ASSIGN);
-        }
-        return make_token(lexer, TOKEN_DIVIDE);
-    }
-    case '%':
-    {
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_MODULO_ASSIGN);
-        }
-        return make_token(lexer, TOKEN_MODULO);
-    }
-    case '<':
-    {
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_LESS_EQUAL);
-        }
-        return make_token(lexer, TOKEN_LESS);
-    }
-    case '>':
-    {
-        if (peek(lexer) == '=')
-        {
-            advance(lexer);
-            return make_token(lexer, TOKEN_GREATER_EQUAL);
-        }
-        return make_token(lexer, TOKEN_GREATER);
-    }
     }
 
     return empty_token(lexer);
@@ -327,95 +363,12 @@ static Token handle_operator_token(Lexer *lexer, char c)
 
 char *token_type_to_string(TokenType type)
 {
-    switch (type)
+    for (int i = 0; i < token_type_names_count; i++)
     {
-    case TOKEN_EOF:
-        return "EOF";
-    case TOKEN_ERROR:
-        return "ERROR";
-    case TOKEN_EMPTY:
-        return "EMPTY";
-    case TOKEN_LET:
-        return "LET";
-    case TOKEN_VAR:
-        return "VAR";
-    case TOKEN_IDENTIFIER:
-        return "IDENTIFIER";
-    case TOKEN_ASSIGN:
-        return "ASSIGN";
-    case TOKEN_TYPE_INT:
-        return "TYPE_INT";
-    case TOKEN_TYPE_FLOAT:
-        return "TYPE_FLOAT";
-    case TOKEN_TYPE_BOOL:
-        return "TYPE_BOOL";
-    case TOKEN_TYPE_STRING:
-        return "TYPE_STRING";
-    case TOKEN_TYPE_CHAR:
-        return "TYPE_CHAR";
-    case TOKEN_INCREMENT:
-        return "INCREMENT";
-    case TOKEN_DECREMENT:
-        return "DECREMENT";
-    case TOKEN_ADD_ASSIGN:
-        return "ADD_ASSIGN";
-    case TOKEN_SUBTRACT_ASSIGN:
-        return "SUBTRACT_ASSIGN";
-    case TOKEN_MULTIPLY_ASSIGN:
-        return "MULTIPLY_ASSIGN";
-    case TOKEN_DIVIDE_ASSIGN:
-        return "DIVIDE_ASSIGN";
-    case TOKEN_MODULO_ASSIGN:
-        return "MODULO_ASSIGN";
-    case TOKEN_EQUAL:
-        return "EQUAL";
-    case TOKEN_NOT_EQUAL:
-        return "NOT_EQUAL";
-    case TOKEN_LESS:
-        return "LESS";
-    case TOKEN_GREATER:
-        return "GREATER";
-    case TOKEN_LESS_EQUAL:
-        return "LESS_EQUAL";
-    case TOKEN_GREATER_EQUAL:
-        return "GREATER_EQUAL";
-    case TOKEN_ADD:
-        return "ADD";
-    case TOKEN_SUBTRACT:
-        return "SUBTRACT";
-    case TOKEN_MULTIPLY:
-        return "MULTIPLY";
-    case TOKEN_DIVIDE:
-        return "DIVIDE";
-    case TOKEN_MODULO:
-        return "MODULO";
-    case TOKEN_NUMBER:
-        return "NUMBER";
-    case TOKEN_FLOAT:
-        return "FLOAT";
-    case TOKEN_BOOLEAN:
-        return "BOOLEAN";
-    case TOKEN_STRING:
-        return "STRING";
-    case TOKEN_CHAR:
-        return "CHAR";
-    case TOKEN_TRUE:
-        return "TRUE";
-    case TOKEN_FALSE:
-        return "FALSE";
-    case TOKEN_LPAREN:
-        return "LPAREN";
-    case TOKEN_RPAREN:
-        return "RPAREN";
-    case TOKEN_LBRACE:
-        return "LBRACE";
-    case TOKEN_RBRACE:
-        return "RBRACE";
-    case TOKEN_SEMICOLON:
-        return "SEMICOLON";
-    default:
-        return "UNKNOWN";
+        if (token_type_names[i].type == type)
+            return token_type_names[i].name;
     }
+    return "UNKNOWN";
 }
 
 Token next_token(Lexer *lexer)
@@ -435,7 +388,7 @@ Token next_token(Lexer *lexer)
     char c = advance(lexer);
 
     // Check for operator tokens
-    Token token = handle_operator_token(lexer, c);
+    Token token = handle_symbol_token(lexer, c);
     if (token.type != TOKEN_EMPTY)
         return token;
 

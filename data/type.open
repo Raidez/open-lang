@@ -1,0 +1,9 @@
+var x = 42;
+x = 10;
+
+let y: int = 42;
+
+let f: float = 3.14;
+let b: bool = true;
+let c: char = 'c';
+let s: string = "Hello";

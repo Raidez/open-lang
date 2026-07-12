@@ -152,6 +152,10 @@ ab.Push(true); // Compile error, you can't add a boolean to a vector of integers
 let ac: <int> = [1, 2, 3];
 ac.Push(4); // Compile error, you can't add an element to a vector declared with `let`
 
+/**** Dict ****/
+
+var ad: <string, int> = {"one": 1, "two": 2, "three": 3}; // So you don't specify size
+
 /**** Pointers ****/
 
 // Pointers are variables that store the memory address of another variable, they are declared with an asterisk before the type

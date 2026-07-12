@@ -32,7 +32,7 @@ static Node *parse_let(Parser *parser)
     consume(parser, TOKEN_LET);
     Token name = consume(parser, TOKEN_IDENTIFIER);
     consume(parser, TOKEN_EQUAL);
-    Token value = consume(parser, TOKEN_NUMBER); // For simplicity, we only handle numbers as values for now
+    Token value = consume(parser, TOKEN_NUMBER_LITERAL); // For simplicity, we only handle numbers as values for now
     consume(parser, TOKEN_SEMICOLON);
 
     // Create a declaration node

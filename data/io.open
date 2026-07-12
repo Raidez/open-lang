@@ -1,0 +1,7 @@
+println("Hello, World!");
+
+let x = 10;
+println("The value of x is: {}", x);
+
+let y = "World";
+println("Hello, {}!", y);
