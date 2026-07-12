@@ -17,19 +17,27 @@ Node *node_float_literal(float value)
     return node;
 }
 
-Node *node_string_literal(char *value)
-{
-    Node *node = malloc(sizeof(Node));
-    node->type = NODE_LITERAL_STRING;
-    node->string_literal.value = value;
-    return node;
-}
-
 Node *node_boolean_literal(bool value)
 {
     Node *node = malloc(sizeof(Node));
     node->type = NODE_LITERAL_BOOL;
     node->boolean_literal.value = value;
+    return node;
+}
+
+Node *node_char_literal(char value)
+{
+    Node *node = malloc(sizeof(Node));
+    node->type = NODE_LITERAL_CHAR;
+    node->char_literal.value = value;
+    return node;
+}
+
+Node *node_string_literal(char *value)
+{
+    Node *node = malloc(sizeof(Node));
+    node->type = NODE_LITERAL_STRING;
+    node->string_literal.value = value;
     return node;
 }
 

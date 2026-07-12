@@ -12,6 +12,7 @@ typedef enum
     TOKEN_IDENTIFIER,
     TOKEN_ASSIGN,
     TOKEN_TYPING,
+    TOKEN_IMPORT,
 
     TOKEN_TYPE_INT,
     TOKEN_TYPE_FLOAT,
@@ -68,6 +69,8 @@ typedef enum
     TOKEN_LBRACE,
     TOKEN_RBRACE,
 
+    TOKEN_NAMESPACE,
+    TOKEN_DOT,
     TOKEN_COMMA,
     TOKEN_SEMICOLON,
 } TokenType;

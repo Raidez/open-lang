@@ -30,6 +30,7 @@ typedef struct
 static const Keyword keywords[] = {
     {"let", 3, TOKEN_LET},
     {"var", 3, TOKEN_VAR},
+    {"import", 6, TOKEN_IMPORT},
 
     {"int", 3, TOKEN_TYPE_INT},
     {"float", 5, TOKEN_TYPE_FLOAT},
@@ -69,7 +70,9 @@ static const Keyword symbols[] = {
     {"%=", 2, TOKEN_MODULO_ASSIGN},
     {"++", 2, TOKEN_INCREMENT},
     {"--", 2, TOKEN_DECREMENT},
+    {"::", 2, TOKEN_NAMESPACE},
     // Single-character symbols after
+    {".", 1, TOKEN_DOT},
     {"=", 1, TOKEN_ASSIGN},
     {":", 1, TOKEN_TYPING},
     {",", 1, TOKEN_COMMA},
@@ -97,6 +100,7 @@ static const TokenTypeName token_type_names[] = {
     {TOKEN_IDENTIFIER, "IDENTIFIER"},
     {TOKEN_ASSIGN, "ASSIGN"},
     {TOKEN_TYPING, "TYPING"},
+    {TOKEN_IMPORT, "IMPORT"},
     {TOKEN_TYPE_INT, "TYPE_INT"},
     {TOKEN_TYPE_FLOAT, "TYPE_FLOAT"},
     {TOKEN_TYPE_BOOL, "TYPE_BOOL"},
@@ -142,6 +146,8 @@ static const TokenTypeName token_type_names[] = {
     {TOKEN_RPAREN, "RPAREN"},
     {TOKEN_LBRACE, "LBRACE"},
     {TOKEN_RBRACE, "RBRACE"},
+    {TOKEN_NAMESPACE, "NAMESPACE"},
+    {TOKEN_DOT, "DOT"},
     {TOKEN_COMMA, "COMMA"},
     {TOKEN_SEMICOLON, "SEMICOLON"},
 };

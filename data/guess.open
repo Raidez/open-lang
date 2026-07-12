@@ -1,0 +1,20 @@
+import random::randint;
+
+let mystery = randint(1, 100);
+var guess: int = 0;
+
+println("Guess the number between 1 and 100!");
+
+while guess != mystery {
+
+    let raw_guess = input("Your guess: ");
+    guess = raw_guess as int;
+
+    if guess < mystery {
+        println("Too low! Try again.");
+    } else if guess > mystery {
+        println("Too high! Try again.");
+    } else {
+        println("Congratulations! You've guessed the number!");
+    }
+}
