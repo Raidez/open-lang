@@ -8,6 +8,10 @@
 
 int main(int argc, char *argv[])
 {
+    bool show_lexer = argv[2] && strcmp(argv[2], "--lexer") == 0;
+    bool show_ast = argv[2] && strcmp(argv[2], "--ast") == 0;
+    bool show_interpreter = argv[2] && strcmp(argv[2], "--interpreter") == 0;
+
     // 0. Parse arguments
     char *input_file;
     if (argc < 2)
@@ -44,7 +48,7 @@ int main(int argc, char *argv[])
     // 3. Lexer
 
     Lexer lexer = {.start = buffer, .current = buffer, .line = 1};
-    if (argv[2] && strcmp(argv[2], "--debug") == 0)
+    if (show_lexer)
     {
         print_tokens(&lexer); // Uncomment this line to print tokens for debugging
         return 0;             // Exit after printing tokens
@@ -56,9 +60,18 @@ int main(int argc, char *argv[])
     Node *ast = parse(&parser);
     free(buffer); // Free the buffer after parsing
 
+    if (show_ast)
+    {
+        print_graph(ast, 0); // Uncomment this line to print the AST for debugging
+        free_node(ast);      // Free the AST after printing
+        return 0;            // Exit after printing the AST
+    }
+
     // 5. Interpret
 
-    interpret(ast);
+    if (show_interpreter)
+        interpret(ast);
+
     free_node(ast); // Free the AST after interpretation
 
     return 0;

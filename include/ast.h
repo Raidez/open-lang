@@ -5,6 +5,8 @@
 
 typedef enum
 {
+    NODE_BLOCK,
+
     NODE_IDENTIFIER,           // identifier (variable name)
     NODE_DECLARATION,          // declaration of a variable
     NODE_IMPORTATION,          // importation of a module
@@ -12,24 +14,16 @@ typedef enum
     NODE_FUNCTION_CALL,        // call of a function
 
     // control flow
-    NODE_IF,
-    NODE_ELSE,
-    NODE_MATCH,
-    NODE_LOOP,
-    NODE_WHILE,
-    NODE_FOR,
-    NODE_BREAK,
-    NODE_CONTINUE,
+    NODE_FLOW, // if, else, match
+    NODE_LOOP, // while, for, loop
+    NODE_STOP, // return, break, continue
 
+    NODE_UNARY_OP,   // unary operation
     NODE_BINARY_OP,  // binary operation
     NODE_LOGICAL_OP, // logical operation
 
     // literals
-    NODE_LITERAL_INT,
-    NODE_LITERAL_FLOAT,
-    NODE_LITERAL_BOOL,
-    NODE_LITERAL_CHAR,
-    NODE_LITERAL_STRING,
+    NODE_LITERAL,
 } NodeType;
 
 typedef enum
@@ -42,12 +36,23 @@ typedef enum
     TYPE_STRING,
 } VariableType;
 
+typedef enum
+{
+    OP_NOT,
+} UnaryOperationType;
+
 typedef enum {
     OP_ADD,
     OP_SUBTRACT,
     OP_MULTIPLY,
     OP_DIVIDE,
     OP_MODULO,
+
+    OP_ADD_ASSIGN,
+    OP_SUBTRACT_ASSIGN,
+    OP_MULTIPLY_ASSIGN,
+    OP_DIVIDE_ASSIGN,
+    OP_MODULO_ASSIGN,
 } BinaryOperationType;
 
 typedef enum {
@@ -57,10 +62,30 @@ typedef enum {
     OP_LESS_THAN_EQUAL,
     OP_GREATER_THAN,
     OP_GREATER_THAN_EQUAL,
+
     OP_AND,
     OP_OR,
     OP_XOR,
 } LogicalOperationType;
+
+typedef enum {
+    FLOW_IF,
+    FLOW_MATCH,
+} FlowType;
+
+typedef enum {
+    LOOP_LOOP,
+    LOOP_WHILE,
+    LOOP_FOR,
+} LoopType;
+
+typedef enum {
+    STOP_RETURN,
+    STOP_BREAK,
+    STOP_CONTINUE,
+} StopType;
+
+/*** NODE ****/
 
 typedef struct Node Node;
 
@@ -69,36 +94,67 @@ struct Node
     NodeType type;
     union
     {
+        struct {
+            Node **statements;
+            int count;
+        } block;
+
         struct { char *name; } identifier;
 
         struct {
             char *name;
+
             bool is_mutable;
             VariableType type;
+
             Node *value;
         } declaration;
 
         struct {
             char *module_name;
-            Node *imported_modules[];
+
+            Node **imported_modules;
+            int count;
         } importation;
 
         struct {
+            char *name;
+
             char **arg_names;
             int arg_count;
             VariableType *arg_types;
 
-            int return_count;
-            VariableType *return_types;
+            VariableType return_type;
 
             Node *body;
         } function_declaration;
 
         struct {
             char *function_name;
+
             int arg_count;
             Node **args;
         } function_call;
+
+        struct {
+            FlowType flow_type;
+            Node *condition;
+
+            Node *body;
+            Node *else_body; // Only used for if statements
+        } flow;
+
+        struct {
+            LoopType loop_type;
+            Node *condition; // Only used for while and for loops
+            
+            Node *body;
+        } loop;
+
+        struct {
+            UnaryOperationType op;
+            Node *operand;
+        } unary_op;
 
         struct {
             BinaryOperationType op;
@@ -112,31 +168,43 @@ struct Node
             Node *right;
         } logical_op;
 
-        struct { int value; } int_literal;
-        struct { float value; } float_literal;
-        struct { bool value; } boolean_literal;
-        struct { char value; } char_literal;
-        struct { char *value; } string_literal;
+        struct {
+            StopType stop_type;
+            Node *value; // Only used for return statements
+        } stop;
+
+        struct {
+            VariableType type;
+            int int_value;
+            float float_value;
+            bool bool_value;
+            char char_value;
+            char *string_value;
+        } literal;
     };
 };
 
+/*** NODE FUNCTIONS ****/
 
-
+Node *node_block(Node **statements, int count);
 Node *node_identifier(char *name);
 Node *node_declaration(char *name, bool is_mutable, VariableType type, Node *value);
-Node *node_importation(char *module_name, Node *imported_modules[]);
-Node *node_function_declaration(char **arg_names, int arg_count, VariableType *arg_types, int return_count, VariableType *return_types, Node *body);
+Node *node_importation(char *module_name, Node **imported_modules, int count);
+Node *node_function_declaration(char *name, char **arg_names, int arg_count, VariableType *arg_types, VariableType return_type, Node *body);
 Node *node_function_call(char *function_name, int arg_count, Node **args);
-
+Node *node_flow(FlowType flow_type, Node *condition, Node *body, Node *else_body);
+Node *node_loop(LoopType loop_type, Node *condition, Node *body);
+Node *node_stop(StopType stop_type, Node *value);
+Node *node_unary_op(UnaryOperationType op, Node *operand);
 Node *node_binary_op(BinaryOperationType op, Node *left, Node *right);
 Node *node_logical_op(LogicalOperationType op, Node *left, Node *right);
+Node *node_literal(VariableType type, char *value);
 
-Node *node_int_literal(int value);
-Node *node_float_literal(float value);
-Node *node_boolean_literal(bool value);
-Node *node_char_literal(char value);
-Node *node_string_literal(char *value);
+/*** HELPER FUNCTIONS ****/
 
+char *node_type_to_string(NodeType type);
+char *node_to_string(Node *node);
+void print_graph(Node *node, int depth);
 void free_node(Node *node);
 
 #endif

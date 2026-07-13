@@ -15,14 +15,19 @@ static Value interpret_operation(Node *node, Value left, Value right)
     switch (node->binary_op.op)
     {
     case OP_ADD:
+    case OP_ADD_ASSIGN:
         return (Value){VALUE_INT, .int_value = left.int_value + right.int_value};
     case OP_SUBTRACT:
+    case OP_SUBTRACT_ASSIGN:
         return (Value){VALUE_INT, .int_value = left.int_value - right.int_value};
     case OP_MULTIPLY:
+    case OP_MULTIPLY_ASSIGN:
         return (Value){VALUE_INT, .int_value = left.int_value * right.int_value};
     case OP_DIVIDE:
+    case OP_DIVIDE_ASSIGN:
         return (Value){VALUE_INT, .int_value = left.int_value / right.int_value};
     case OP_MODULO:
+    case OP_MODULO_ASSIGN:
         return (Value){VALUE_INT, .int_value = left.int_value % right.int_value};
     default:
         fprintf(stderr, "Unknown operation type %d\n", node->binary_op.op);
@@ -37,14 +42,36 @@ Value interpret(Node *node)
 {
     switch (node->type)
     {
-    case NODE_LITERAL_INT:
-        return (Value){.type = VALUE_INT, .int_value = node->int_literal.value};
-    case NODE_LITERAL_FLOAT:
-        return (Value){.type = VALUE_FLOAT, .float_value = node->float_literal.value};
-    case NODE_LITERAL_STRING:
-        return (Value){.type = VALUE_STRING, .string_value = node->string_literal.value};
-    case NODE_LITERAL_BOOL:
-        return (Value){.type = VALUE_BOOL, .bool_value = node->boolean_literal.value};
+    case NODE_BLOCK:
+    {
+        Value last_value = {0};
+        for (int i = 0; i < node->block.count; i++)
+        {
+            last_value = interpret(node->block.statements[i]);
+        }
+        return last_value;
+    }
+    case NODE_LITERAL:
+    {
+        switch (node->literal.type)
+        {
+        case TYPE_INT:
+            return (Value){.type = VALUE_INT, .int_value = node->literal.int_value};
+            break;
+        case TYPE_FLOAT:
+            return (Value){.type = VALUE_FLOAT, .float_value = node->literal.float_value};
+            break;
+        case TYPE_BOOL:
+            return (Value){.type = VALUE_BOOL, .bool_value = node->literal.bool_value};
+            break;
+        case TYPE_STRING:
+            return (Value){.type = VALUE_STRING, .string_value = node->literal.string_value};
+            break;
+        default:
+            fprintf(stderr, "Unknown literal type %d\n", node->literal.type);
+            exit(1);
+        }
+    }
     case NODE_BINARY_OP:
     {
         Value left = interpret(node->binary_op.left);
@@ -71,7 +98,8 @@ Value interpret(Node *node)
         exit(1);
     }
     default:
-        fprintf(stderr, "Unknown node type %d\n", node->type);
+        fprintf(stderr, "Unknown node type %s\n",
+                node_type_to_string(node->type));
         exit(1);
     }
 }

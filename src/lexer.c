@@ -132,9 +132,8 @@ static const TokenTypeName token_type_names[] = {
     {TOKEN_MULTIPLY, "MULTIPLY"},
     {TOKEN_DIVIDE, "DIVIDE"},
     {TOKEN_MODULO, "MODULO"},
-    {TOKEN_NUMBER_LITERAL, "NUMBER_LITERAL"},
+    {TOKEN_INT_LITERAL, "INT_LITERAL"},
     {TOKEN_FLOAT_LITERAL, "FLOAT_LITERAL"},
-    {TOKEN_BOOLEAN_LITERAL, "BOOLEAN_LITERAL"},
     {TOKEN_STRING_LITERAL, "STRING_LITERAL"},
     {TOKEN_CHAR_LITERAL, "CHAR_LITERAL"},
     {TOKEN_TRUE_LITERAL, "TRUE_LITERAL"},
@@ -347,7 +346,7 @@ static Token handle_numeric_token(Lexer *lexer)
     if (memchr(lexer->start, '.', length) != NULL)
         return make_token(lexer, TOKEN_FLOAT_LITERAL);
 
-    return make_token(lexer, TOKEN_NUMBER_LITERAL);
+    return make_token(lexer, TOKEN_INT_LITERAL);
 }
 
 /**
