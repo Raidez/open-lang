@@ -1,0 +1,13 @@
+extern func srand(seed: int);
+extern func rand() -> int;
+extern func time() -> int;
+
+func seed(seed: int = time()) {
+    srand(seed);
+}
+
+func randint(min: int, max: int) -> int {
+    return rand() % (max - min + 1) + min;
+}
+
+seed();

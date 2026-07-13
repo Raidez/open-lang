@@ -1,0 +1,20 @@
+extern func printf(format: string, args: ...) -> int;
+extern func scanf(format: string, args: ...) -> int;
+extern const stdin: *unknown;
+extern const stdout: *unknown;
+extern const stderr: *unknown;
+
+func println(message: string, args: ...) {
+    printf("%s\n", message, args);
+}
+
+func print(message: string, args: ...) {
+    printf("%s", message, args);
+}
+
+func input(prompt: string) -> string {
+    printf("%s", prompt);
+    var buffer: string;
+    scanf("%s", &buffer);
+    return buffer;
+}
