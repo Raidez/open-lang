@@ -95,13 +95,23 @@ typedef struct
 } Lexer;
 
 /**
- * Convert a token type to string
+ * Convert a token type to string.
+ * @param type The token type.
+ * @return The string representation of the token type.
  */
 char *token_type_to_string(TokenType type);
 
 /**
- * Get the next token from the lexer
+ * Get the next token from the lexer.
+ * @param lexer The lexer.
+ * @return The next token.
  */
 Token next_token(Lexer *lexer);
+
+/**
+ * Print all tokens from the lexer.
+ * @param lexer The lexer.
+ */
+void print_tokens(Lexer *lexer);
 
 #endif

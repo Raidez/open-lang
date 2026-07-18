@@ -1,14 +1,30 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "utils.h"
 
-void print_tokens(Lexer *lexer)
+char *read_file(char *input_file)
 {
-    Token token;
-    do
+    // Open file
+    FILE *file = fopen(input_file, "rb");
+    if (file == NULL)
     {
-        token = next_token(lexer);
-        printf("Token: type=%s, start='%.*s', length=%d, line=%d\n",
-               token_type_to_string(token.type), token.length, token.start, token.length, token.line);
+        fprintf(stderr, "Can't open file '%s'\n", input_file);
+        return NULL;
+    }
 
-    } while (token.type != TOKEN_EOF);
+    // Get the size of the file
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    rewind(file);
+
+    // Allocate a buffer to hold the file contents
+    char *buffer = malloc(size + 1);
+    fread(buffer, 1, size, file);
+    buffer[size] = '\0';
+
+    // Close the file after reading
+    fclose(file);
+
+    return buffer;
 }

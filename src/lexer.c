@@ -419,3 +419,20 @@ Token next_token(Lexer *lexer)
 
     return error_token(lexer, "Unexpected character");
 }
+
+void print_tokens(Lexer *lexer)
+{
+    char *first_token = lexer->current;
+
+    Token token;
+    do
+    {
+        token = next_token(lexer);
+        printf("Token: type=%s, start='%.*s', length=%d, line=%d\n",
+               token_type_to_string(token.type), token.length, token.start, token.length, token.line);
+
+    } while (token.type != TOKEN_EOF);
+
+    // Reset lexer state to the first token
+    lexer->current = first_token;
+}

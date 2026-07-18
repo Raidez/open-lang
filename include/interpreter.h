@@ -24,7 +24,9 @@ typedef struct
 } Value;
 
 /**
- * Interpret the given AST node for debug
+ * Interpret the given AST node for debug.
+ * @param node The AST node to interpret.
+ * @return The value of the interpreted node.
  */
 Value interpret(Node *node);
 

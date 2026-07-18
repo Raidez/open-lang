@@ -41,7 +41,8 @@ typedef enum
     OP_NOT,
 } UnaryOperationType;
 
-typedef enum {
+typedef enum
+{
     OP_ADD,
     OP_SUBTRACT,
     OP_MULTIPLY,
@@ -55,7 +56,8 @@ typedef enum {
     OP_MODULO_ASSIGN,
 } BinaryOperationType;
 
-typedef enum {
+typedef enum
+{
     OP_EQUAL,
     OP_NOT_EQUAL,
     OP_LESS_THAN,
@@ -68,18 +70,21 @@ typedef enum {
     OP_XOR,
 } LogicalOperationType;
 
-typedef enum {
+typedef enum
+{
     FLOW_IF,
     FLOW_MATCH,
 } FlowType;
 
-typedef enum {
+typedef enum
+{
     LOOP_LOOP,
     LOOP_WHILE,
     LOOP_FOR,
 } LoopType;
 
-typedef enum {
+typedef enum
+{
     STOP_RETURN,
     STOP_BREAK,
     STOP_CONTINUE,
@@ -94,14 +99,19 @@ struct Node
     NodeType type;
     union
     {
-        struct {
+        struct
+        {
             Node **statements;
             int count;
         } block;
 
-        struct { char *name; } identifier;
+        struct
+        {
+            char *name;
+        } identifier;
 
-        struct {
+        struct
+        {
             char *name;
 
             bool is_mutable;
@@ -110,14 +120,16 @@ struct Node
             Node *value;
         } declaration;
 
-        struct {
+        struct
+        {
             char *module_name;
 
             Node **imported_modules;
             int count;
         } importation;
 
-        struct {
+        struct
+        {
             char *name;
 
             char **arg_names;
@@ -129,14 +141,16 @@ struct Node
             Node *body;
         } function_declaration;
 
-        struct {
+        struct
+        {
             char *function_name;
 
             int arg_count;
             Node **args;
         } function_call;
 
-        struct {
+        struct
+        {
             FlowType flow_type;
             Node *condition;
 
@@ -144,36 +158,42 @@ struct Node
             Node *else_body; // Only used for if statements
         } flow;
 
-        struct {
+        struct
+        {
             LoopType loop_type;
             Node *condition; // Only used for while and for loops
-            
+
             Node *body;
         } loop;
 
-        struct {
+        struct
+        {
             UnaryOperationType op;
             Node *operand;
         } unary_op;
 
-        struct {
+        struct
+        {
             BinaryOperationType op;
             Node *left;
             Node *right;
         } binary_op;
 
-        struct {
+        struct
+        {
             LogicalOperationType op;
             Node *left;
             Node *right;
         } logical_op;
 
-        struct {
+        struct
+        {
             StopType stop_type;
             Node *value; // Only used for return statements
         } stop;
 
-        struct {
+        struct
+        {
             VariableType type;
             int int_value;
             float float_value;
@@ -202,9 +222,31 @@ Node *node_literal(VariableType type, char *value);
 
 /*** HELPER FUNCTIONS ****/
 
+/**
+ * Returns a string representation of the given NodeType.
+ * @param type The NodeType to convert to a string.
+ * @return A string representation of the NodeType.
+ */
 char *node_type_to_string(NodeType type);
+
+/**
+ * Returns a string representation of the given Node.
+ * @param node The Node to convert to a string.
+ * @return A string representation of the Node.
+ */
 char *node_to_string(Node *node);
+
+/**
+ * Prints the AST graph starting from the given node.
+ * @param node The root node of the AST to print.
+ * @param depth The current depth in the AST (used for indentation).
+ */
 void print_graph(Node *node, int depth);
+
+/**
+ * Frees the memory allocated for the given Node and its children.
+ * @param node The Node to free.
+ */
 void free_node(Node *node);
 
 #endif
