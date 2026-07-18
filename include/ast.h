@@ -223,6 +223,13 @@ Node *node_literal(VariableType type, char *value);
 /*** HELPER FUNCTIONS ****/
 
 /**
+ * Returns a string representation of the given VariableType.
+ * @param type The VariableType to convert to a string.
+ * @return A string representation of the VariableType.
+ */
+char *node_variable_type_to_string(VariableType type);
+
+/**
  * Returns a string representation of the given NodeType.
  * @param type The NodeType to convert to a string.
  * @return A string representation of the NodeType.

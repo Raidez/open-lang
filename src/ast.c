@@ -12,27 +12,6 @@ typedef struct
     char *(*handler)(Node);
 } NodeTypeName;
 
-static char *node_variable_type_to_string(VariableType type)
-{
-    switch (type)
-    {
-    case TYPE_INFERRED:
-        return "inferred";
-    case TYPE_INT:
-        return "int";
-    case TYPE_FLOAT:
-        return "float";
-    case TYPE_BOOL:
-        return "bool";
-    case TYPE_CHAR:
-        return "char";
-    case TYPE_STRING:
-        return "string";
-    default:
-        return "unknow";
-    }
-}
-
 static char *node_identifier_to_string(Node node)
 {
     char *buffer = malloc(sizeof(char) * 100);
@@ -287,6 +266,27 @@ Node *node_literal(VariableType type, char *value)
     }
 
     return node;
+}
+
+char *node_variable_type_to_string(VariableType type)
+{
+    switch (type)
+    {
+    case TYPE_INFERRED:
+        return "inferred";
+    case TYPE_INT:
+        return "int";
+    case TYPE_FLOAT:
+        return "float";
+    case TYPE_BOOL:
+        return "bool";
+    case TYPE_CHAR:
+        return "char";
+    case TYPE_STRING:
+        return "string";
+    default:
+        return "unknow";
+    }
 }
 
 char *node_type_to_string(NodeType type)

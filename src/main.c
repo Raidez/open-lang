@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     argparse(argc, argv);
     bool show_lexer = is_flag_set("--lexer");
     bool show_ast = is_flag_set("--ast");
+    bool show_symbols = is_flag_set("--symbols");
     bool show_interpreter = is_flag_set("--interpreter");
     char *input_file = get_argument_value("input_file");
 
@@ -54,7 +55,13 @@ int main(int argc, char *argv[])
     // 5. Semantic Analysis
 
     printf("\n5. Semantic Analysis\n");
-    // analyze_semantics(ast);
+    analyze(ast);
+
+    if (show_symbols)
+    {
+        printf("\n========== Symbols ==========\n");
+        print_symbols();
+    }
 
     // 6. Interpret / Compile
 

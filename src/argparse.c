@@ -8,10 +8,11 @@
 
 static void print_usage()
 {
-    printf("Usage: open <input_file> [--lexer] [--ast] [--interpreter]\n");
+    printf("Usage: open <input_file> [--lexer] [--ast] [--interpreter] [--symbols]\n");
     printf("Options:\n");
     printf("  --lexer        Show lexer output.\n");
     printf("  --ast          Show AST output.\n");
+    printf("  --symbols      Show symbol table.\n");
     printf("  --interpreter  Run the interpreter.\n");
 }
 
@@ -19,6 +20,7 @@ static Argument arguments[] = {
     {"input_file", POSITIONAL, "The input file to process.", NULL, NULL},
     {"--lexer", FLAG, "Show lexer output.", "false", NULL},
     {"--ast", FLAG, "Show AST output.", "false", NULL},
+    {"--symbols", FLAG, "Show symbol table.", "false", NULL},
     {"--interpreter", FLAG, "Run the interpreter.", "false", NULL},
 };
 static int argument_count = sizeof(arguments) / sizeof(arguments[0]);
