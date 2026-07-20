@@ -1,10 +1,19 @@
 extern func printf(format: string, args: ...) -> int;
 extern func scanf(format: string, args: ...) -> int;
-extern func print_value(arg: Value);
+
+static func print_argument(arg: Value) {
+    switch arg.type {
+        TYPE_INT => printf("%d", arg.value.int_value);
+        TYPE_FLOAT => printf("%f", arg.value.float_value);
+        TYPE_BOOL => printf("%s", arg.value.bool_value ? "true" : "false");
+        TYPE_CHAR => printf("%c", arg.value.char_value);
+        TYPE_STRING => printf("%s", arg.value.string_value);
+    }
+}
 
 func print(args: ...) {
     for i in 0..args.size {
-        print_value(args.items[i]);
+        print_argument(args.items[i]);
         if i + 1 < args.size {
             print(" ");
         }
@@ -13,7 +22,7 @@ func print(args: ...) {
 
 func println(args: ...) {
     for i in 0..args.size {
-        print_value(args.items[i]);
+        print_argument(args.items[i]);
         if i + 1 < args.size {
             print(" ");
         }

@@ -1,0 +1,49 @@
+enum Type {
+    TYPE_INT,
+    TYPE_FLOAT,
+    TYPE_BOOL,
+    TYPE_CHAR,
+    TYPE_STRING,
+};
+
+union ValueData {
+    int_value: int;
+    float_value: float;
+    bool_value: bool;
+    char_value: char;
+    string_value: string;
+};
+
+struct Value {
+    type: Type;
+    value: ValueData;
+};
+
+struct Tuple {
+    size: uint;
+    items: Value[];
+};
+
+func value_int(value: int) -> Value {
+    return Value{TYPE_INT, value.int_value = value};
+}
+
+func value_float(value: float) -> Value {
+    return Value{TYPE_FLOAT, value.float_value = value};
+}
+
+func value_bool(value: bool) -> Value {
+    return Value{TYPE_BOOL, value.bool_value = value};
+}
+
+func value_char(value: char) -> Value {
+    return Value{TYPE_CHAR, value.char_value = value};
+}
+
+func value_string(value: string) -> Value {
+    return Value{TYPE_STRING, value.string_value = value};
+}
+
+func tuple(size: uint, items: Value[]) -> Tuple {
+    return Tuple{size, items};
+}

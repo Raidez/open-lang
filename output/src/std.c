@@ -2,28 +2,28 @@
 
 #include "std.h"
 
-static void print_value(Value value)
+static void print_argument(Value arg)
 {
-    switch (value.type)
+    switch (arg.type)
     {
     case TYPE_INT:
-        printf("%d", value.value.int_value);
+        printf("%d", arg.value.int_value);
         break;
 
     case TYPE_FLOAT:
-        printf("%f", value.value.float_value);
+        printf("%f", arg.value.float_value);
         break;
 
     case TYPE_BOOL:
-        printf("%s", value.value.bool_value ? "true" : "false");
+        printf("%s", arg.value.bool_value ? "true" : "false");
         break;
 
     case TYPE_CHAR:
-        printf("%c", value.value.char_value);
+        printf("%c", arg.value.char_value);
         break;
 
     case TYPE_STRING:
-        printf("%s", value.value.string_value);
+        printf("%s", arg.value.string_value);
         break;
 
     default:
@@ -35,7 +35,7 @@ void print(Tuple args)
 {
     for (size_t i = 0; i < args.size; i++)
     {
-        print_value(args.items[i]);
+        print_argument(args.items[i]);
         if (i + 1 < args.size)
             printf(" ");
     }
@@ -45,7 +45,7 @@ void println(Tuple args)
 {
     for (size_t i = 0; i < args.size; i++)
     {
-        print_value(args.items[i]);
+        print_argument(args.items[i]);
         if (i + 1 < args.size)
             printf(" ");
     }

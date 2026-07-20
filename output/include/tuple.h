@@ -11,19 +11,21 @@ typedef enum
     TYPE_BOOL,
     TYPE_CHAR,
     TYPE_STRING,
-} Type;
+} ValueType;
+
+typedef union
+{
+    int int_value;
+    double float_value;
+    bool bool_value;
+    char char_value;
+    char *string_value;
+} ValueData;
 
 typedef struct
 {
-    Type type;
-    union
-    {
-        int int_value;
-        double float_value;
-        bool bool_value;
-        char char_value;
-        char *string_value;
-    } value;
+    ValueType type;
+    ValueData value;
 } Value;
 
 typedef struct
