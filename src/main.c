@@ -73,9 +73,9 @@ int main(int argc, char *argv[])
     else
     {
         printf("\n6. Compilation\n");
-        // FILE *output_file = fopen("output.c", "w");
-        // codegen(ast, output_file);
-        // fclose(output_file);
+        FILE *output_file = fopen("output/src/output.c", "w");
+        codegen(ast, output_file);
+        fclose(output_file);
     }
 
     // 7. Cleanup
