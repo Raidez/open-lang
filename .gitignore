@@ -1,4 +1,7 @@
 .vscode/
 bin/
-open
-output/
+openc
+
+output/run
+output/bin/
+output/src/output.c

@@ -196,7 +196,7 @@ struct Node
         {
             VariableType type;
             int int_value;
-            float float_value;
+            double float_value;
             bool bool_value;
             char char_value;
             char *string_value;

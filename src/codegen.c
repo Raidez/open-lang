@@ -136,10 +136,6 @@ void codegen_node(Node *node, FILE *output_file)
 
 void codegen(Node *node, FILE *output_file)
 {
-    fprintf(output_file, "#include <stdio.h>\n");
-    fprintf(output_file, "#include <stdlib.h>\n");
-    fprintf(output_file, "#include <stdbool.h>\n");
-    fprintf(output_file, "#include <string.h>\n");
     fprintf(output_file, "#include \"std.h\"\n");
 
     fprintf(output_file, "\nint main() {\n");

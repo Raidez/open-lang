@@ -1,15 +1,24 @@
 extern func printf(format: string, args: ...) -> int;
 extern func scanf(format: string, args: ...) -> int;
-extern const stdin: *unknown;
-extern const stdout: *unknown;
-extern const stderr: *unknown;
+extern func print_value(arg: Value);
 
-func println(message: string, args: ...) {
-    printf("%s\n", message, args);
+func print(args: ...) {
+    for i in 0..args.size {
+        print_value(args.items[i]);
+        if i + 1 < args.size {
+            print(" ");
+        }
+    }
 }
 
-func print(message: string, args: ...) {
-    printf("%s", message, args);
+func println(args: ...) {
+    for i in 0..args.size {
+        print_value(args.items[i]);
+        if i + 1 < args.size {
+            print(" ");
+        }
+    }
+    print("\n");
 }
 
 func input(prompt: string) -> string {

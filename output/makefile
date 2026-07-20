@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g -Iinclude
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:src/%.c=bin/%.o)
-TARGET = openc
+TARGET = run
 
 all: $(TARGET)
 
